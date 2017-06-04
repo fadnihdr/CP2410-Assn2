@@ -22,25 +22,28 @@ def main():
 
 
 def run_two_player_mode():
-    columns = 3
-    rows = 3
-    game = Connect3Board(columns,rows)
+    columns = get_int("How many columns?")
+    rows = get_int("How many rows?")
+    game = Connect3Board(columns, rows)
     print(game)
     a = True
     while a:
         print(game.get_turn_number())
-        print(game.get_whose_turn())
-        userInput = get_int("In which column do you want to put?")
-        if game.can_add_token_to_column(userInput):
-            game.add_token(userInput)
+        current = game.get_whose_turn()
+        print(current)
+        uinput = get_int("In which column do you want to put?")
+        if game.can_add_token_to_column(uinput):
+            game.add_token(uinput)
             if game.get_winner():
-                print(game.get_whose_turn() + " Wins")
+                print(game)
+                print(current + " Wins")
                 break
             else:
+
                 print(game)
         else:
             print("cannot lah")
-    main()
+    return 0
 
 
 def run_ai_mode():

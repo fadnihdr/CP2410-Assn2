@@ -46,25 +46,40 @@ class Connect3Board:
 
         # this only works correctly for 3*3, you will need to implement a solution that works for larger
         # sized boards
-        if self._rows == self._rows == 3:
+
+        if self._rows == self._cols == 3:
             if self._board[0][0] is not None and \
                     (self._board[0][0] == self._board[0][1] == self._board[0][2] or
-                     self._board[0][0] == self._board[1][0] == self._board[2][0] or
-                     self._board[0][0] == self._board[1][1] == self._board[2][2]):
+                                 self._board[0][0] == self._board[1][0] == self._board[2][0] or
+                                 self._board[0][0] == self._board[1][1] == self._board[2][2]):
                 return self._board[0][0]
             elif self._board[1][0] is not None and self._board[1][0] == self._board[1][1] == self._board[1][2]:
                 return self._board[1][0]
             elif self._board[2][0] is not None and \
                     (self._board[2][0] == self._board[2][1] == self._board[2][2] or
-                     self._board[2][0] == self._board[1][1] == self._board[0][2]):
+                                 self._board[2][0] == self._board[1][1] == self._board[0][2]):
                 return self._board[2][0]
             elif self._board[0][1] is not None and self._board[0][1] == self._board[1][1] == self._board[2][1]:
                 return self._board[0][1]
             elif self._board[0][2] is not None and self._board[0][2] == self._board[1][2] == self._board[2][2]:
                 return self._board[0][2]
         else:
-            # implement your solution here
-            pass
+            try:
+                for r in range(self._rows):
+                    for c in range(self._cols):
+                        print(str(self._board[r][c]) +" in row [" + str(r) + "] and column[" + str(c) + "]")
+                        # checks vertical tokens
+                        if self._board[r][c] is not None and \
+                                (self._board[r][c] == self._board[r + 1][c] == self._board[r + 2][c]) or \
+                                ():
+                            return self._board[r][c]
+                        # checks horizontal tokens
+                        if self._board[r][c] is not None and \
+                                (self._board[r][c] == self._board[r][c + 1] == self._board[r][c+2]):
+                            return self._board[r][c]
+            except IndexError:
+                print("index error")
+
 
         # no winner discovered, so check for draw or otherwise return None
         if self._turn_number >= self._rows * self._cols:
