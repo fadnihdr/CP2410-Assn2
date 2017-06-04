@@ -27,7 +27,9 @@ class GameTree:
             # for you to complete...
 
         def _create_children(self):
-            pass
+            for c in range(self._gameboard._cols):
+                game = self._gameboard.make_copy().add_token(c)
+                GameTree._Node(game)
 
         def _compute_score(self):
             # for you to complete...

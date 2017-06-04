@@ -8,6 +8,7 @@ This file forms part of the assessment for CP2410 Assignment 2
 """
 
 import copy
+from timeit import default_timer as timer
 
 
 class Connect3Board:
@@ -42,44 +43,35 @@ class Connect3Board:
 
     def get_winner(self):
         """ Returns None if the game is not complete, DRAW if no more moves can be played and there is no winner,
-        or the token (O or #) that has won the game by making three-in-a-row horizontally, vertically, or diagonally."""
+        or the token (O or #) that has won the game by making three-in-a-r horizontally, vertically, or diagonally."""
 
         # this only works correctly for 3*3, you will need to implement a solution that works for larger
         # sized boards
+        start = timer()
+        try:
+            for r in range(self._rows):
+                for c in range(self._cols):
+                    if self._board[r][c] is not None:
 
-        if self._rows == self._cols == 3:
-            if self._board[0][0] is not None and \
-                    (self._board[0][0] == self._board[0][1] == self._board[0][2] or
-                                 self._board[0][0] == self._board[1][0] == self._board[2][0] or
-                                 self._board[0][0] == self._board[1][1] == self._board[2][2]):
-                return self._board[0][0]
-            elif self._board[1][0] is not None and self._board[1][0] == self._board[1][1] == self._board[1][2]:
-                return self._board[1][0]
-            elif self._board[2][0] is not None and \
-                    (self._board[2][0] == self._board[2][1] == self._board[2][2] or
-                                 self._board[2][0] == self._board[1][1] == self._board[0][2]):
-                return self._board[2][0]
-            elif self._board[0][1] is not None and self._board[0][1] == self._board[1][1] == self._board[2][1]:
-                return self._board[0][1]
-            elif self._board[0][2] is not None and self._board[0][2] == self._board[1][2] == self._board[2][2]:
-                return self._board[0][2]
-        else:
-            try:
-                for r in range(self._rows):
-                    for c in range(self._cols):
-                        print(str(self._board[r][c]) +" in row [" + str(r) + "] and column[" + str(c) + "]")
-                        # checks vertical tokens
-                        if self._board[r][c] is not None and \
-                                (self._board[r][c] == self._board[r + 1][c] == self._board[r + 2][c]) or \
-                                ():
+                        # vertical
+                        if r < self._rows - 2 and (self._board[r][c] == self._board[r + 1][c] == self._board[r + 2][c]):
                             return self._board[r][c]
-                        # checks horizontal tokens
-                        if self._board[r][c] is not None and \
-                                (self._board[r][c] == self._board[r][c + 1] == self._board[r][c+2]):
-                            return self._board[r][c]
-            except IndexError:
-                print("index error")
 
+                            # horizontal
+                        if c < self._cols - 2 and (self._board[r][c] == self._board[r][c + 1] == self._board[r][c + 2]):
+                            return self._board[r][c]
+
+                            # upward diagonal
+                        if c < self._cols - 2 and r >= 2 and (
+                                self._board[r][c] == self._board[r - 1][c + 1] == self._board[r - 2][c + 2]):
+                            return self._board[r][c]
+
+                            # downward diagonal
+                        if c < self._cols - 2 and r < self._rows - 2 and (
+                                self._board[r][c] == self._board[r + 1][c + 1] == self._board[r + 2][c + 2]):
+                            return self._board[r][c]
+        except IndexError:
+            print("index error")
 
         # no winner discovered, so check for draw or otherwise return None
         if self._turn_number >= self._rows * self._cols:
@@ -93,9 +85,9 @@ class Connect3Board:
         assert 0 <= column < self._cols
         token = Connect3Board.TOKENS[self._turn_number % 2]
         if self._board[0][column] is None:
-            for row in range(self._rows - 1, -1, -1):
-                if self._board[row][column] is None:
-                    self._board[row][column] = token
+            for r in range(self._rows - 1, -1, -1):
+                if self._board[r][column] is None:
+                    self._board[r][column] = token
                     self._turn_number += 1
                     return True
         return False
@@ -111,8 +103,8 @@ class Connect3Board:
     def __str__(self):
         column_labels = ' ' + ''.join(str(i) for i in range(self._cols))
         rows = [column_labels]
-        for row in self._board:
-            rows.append('|' + ''.join(c if c is not None else ' ' for c in row) + '|')
+        for r in self._board:
+            rows.append('|' + ''.join(c if c is not None else ' ' for c in r) + '|')
         rows.append('-' * (self._cols + 2))
         rows.append(column_labels)
         return '\n'.join(rows)
